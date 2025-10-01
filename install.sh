@@ -29,7 +29,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMPDIR=$(mktemp -d)
 umask 077
 
-APT_PACKAGES=(curl jq sed awk iproute2 tar ca-certificates logrotate systemd unzip uuid-runtime)
+APT_PACKAGES=(curl jq sed gawk iproute2 tar ca-certificates logrotate systemd unzip uuid-runtime)
 
 apt-get update
 apt-get install -y "${APT_PACKAGES[@]}"
