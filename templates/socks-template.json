@@ -1,0 +1,19 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": {{PORT}},
+      "protocol": "socks",
+      "settings": {
+        "udp": false,
+        "auth": "noauth"
+      }
+    }
+  ],
+  "outbounds": [
+    {{OUTBOUND}}
+  ]
+}

@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Xray DNS Round Robin rotator periodically
+
+[Timer]
+Unit=xray-dns-rotator.service
+OnBootSec=60
+OnUnitActiveSec=60s
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
