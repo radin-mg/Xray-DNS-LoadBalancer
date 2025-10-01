@@ -29,6 +29,62 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TMPDIR=$(mktemp -d)
 umask 077
 
+REQUIRED_FILES=(
+    "xray-dns.sh"
+    "bot.sh"
+    "helpers.sh"
+    "templates/socks-template.json"
+    "logrotate.conf"
+    "systemd/xray-dns.service"
+    "systemd/xray-dns.timer"
+    "systemd/xray-dns-rotator.service"
+    "systemd/xray-dns-rotator.timer"
+    "systemd/xray-dns-bot.service"
+)
+
+ensure_repo_payload() {
+    local required
+    for required in "${REQUIRED_FILES[@]}"; do
+        if [[ ! -e "$REPO_DIR/$required" ]]; then
+            download_repo_payload
+            break
+        fi
+    done
+    for required in "${REQUIRED_FILES[@]}"; do
+        if [[ ! -e "$REPO_DIR/$required" ]]; then
+            echo "[ERROR] Required installer file '$required' not found in $REPO_DIR" >&2
+            exit 1
+        fi
+    done
+}
+
+download_repo_payload() {
+    local repo_slug="${XRAY_DNS_REPO_SLUG:-radin-mg/Xray-DNS-LoadBalancer}"
+    local api_url="https://api.github.com/repos/$repo_slug/releases/latest"
+    local release_json=""
+    release_json=$(curl -fsSL "$api_url")
+    local tarball_url
+    tarball_url=$(grep -Eo '"tarball_url"\s*:\s*"[^"]+"' <<<"$release_json" | head -n1 | cut -d '"' -f4)
+    if [[ -z "$tarball_url" ]]; then
+        local default_branch
+        default_branch=$(grep -Eo '"default_branch"\s*:\s*"[^"]+"' <<<"$release_json" | head -n1 | cut -d '"' -f4)
+        default_branch=${default_branch:-main}
+        tarball_url="https://codeload.github.com/$repo_slug/tar.gz/refs/heads/$default_branch"
+    fi
+    if [[ -z "$tarball_url" ]]; then
+        echo "[ERROR] Unable to determine repository tarball URL for $repo_slug" >&2
+        exit 1
+    fi
+    local repo_tmp="$TMPDIR/repo"
+    mkdir -p "$repo_tmp"
+    local archive="$TMPDIR/repo.tar.gz"
+    curl -fsSL "$tarball_url" -o "$archive"
+    tar -xzf "$archive" --strip-components=1 -C "$repo_tmp"
+    REPO_DIR="$repo_tmp"
+}
+
+ensure_repo_payload
+
 APT_PACKAGES=(curl jq sed gawk iproute2 tar ca-certificates logrotate systemd unzip uuid-runtime)
 
 apt-get update

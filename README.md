@@ -18,6 +18,14 @@
 sudo bash install.sh
 ```
 
+### الگوهای فراخوانی پشتیبانی‌شده
+
+- کلون محلی مخزن و اجرای اسکریپت: `git clone https://github.com/radin-mg/Xray-DNS-LoadBalancer.git && cd Xray-DNS-LoadBalancer && sudo bash install.sh`
+- نصب مستقیم از طریق `curl | bash`: `curl -fsSL https://raw.githubusercontent.com/radin-mg/Xray-DNS-LoadBalancer/main/install.sh | sudo bash`
+- یا استفاده از پردازش جایگزین (برای حفظ تاریخچه پوسته): `sudo bash <(curl -fsSL https://raw.githubusercontent.com/radin-mg/Xray-DNS-LoadBalancer/main/install.sh)`
+
+نصب‌کننده ابتدا بررسی می‌کند که فایل‌های لازم (`xray-dns.sh`، `bot.sh`، تمپلیت‌ها، واحدهای systemd و ...) در مسیر فعلی در دسترس هستند. اگر اسکریپت را به صورت `curl | bash` اجرا کنید یا فایل‌ها وجود نداشته باشند، آخرین انتشار رسمی از GitHub به صورت موقت در دایرکتوری امن (همراه با umask سختگیرانه) دانلود و استخراج می‌شود، سپس پس از پایان نصب به طور خودکار پاکسازی خواهد شد.
+
 اسکریپت نصب ابزارهای مورد نیاز، آخرین نسخه پایدار Xray-Core، ساختار دایرکتوری `/opt/xray-dns` و فایل محیطی `env` را ایجاد می‌کند. در اولین اجرا، توکن‌های هتزنر و تلگرام، آی‌دی مجاز و بازه‌های زمانی از کاربر پرسیده می‌شود. سپس واحدهای systemd فعال می‌گردند:
 
 - `xray-dns.timer` — اجرای پایش Best-Latency (۱۵ یا ۳۰ ثانیه با توجه به env).
