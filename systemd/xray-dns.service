@@ -1,0 +1,21 @@
+[Unit]
+Description=Xray DNS Best Latency Monitor
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/opt/xray-dns/env
+WorkingDirectory=/opt/xray-dns
+ExecStart=/opt/xray-dns/xray-dns.sh --monitor-once
+User=root
+Group=root
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+Restart=on-failure
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

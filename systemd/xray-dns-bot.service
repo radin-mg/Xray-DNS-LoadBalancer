@@ -1,0 +1,17 @@
+[Unit]
+Description=Xray DNS Telegram Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/opt/xray-dns/env
+WorkingDirectory=/opt/xray-dns
+ExecStart=/opt/xray-dns/bot.sh
+Restart=always
+RestartSec=5
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

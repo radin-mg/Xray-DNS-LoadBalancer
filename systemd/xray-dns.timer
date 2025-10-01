@@ -1,0 +1,12 @@
+[Unit]
+Description=Run Xray DNS Monitor periodically
+
+[Timer]
+Unit=xray-dns.service
+OnBootSec=30
+OnUnitActiveSec=15s
+AccuracySec=1s
+Persistent=true
+
+[Install]
+WantedBy=timers.target
